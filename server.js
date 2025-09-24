@@ -1,24 +1,32 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "public")));
+// Serve static frontend files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, "../frontend")));
 
-app.post("/generate", (req, res) =
-  const { prompt, type, mode, fps, quality, captions } = req.body;
-  const ext = type === "video" ? "mp4" : "png";
-  const filename = `output_\${Date.now()}.\${ext}`;
-  const filepath = path.join(__dirname, "public", filename);
-
-  fs.writeFileSync(filepath, `Generated \${type} for: \${prompt}, mode: \${mode}, \${fps} FPS, \${quality}, captions: \${captions}`);
-  res.json({ url: `/${filename}`, type });
+// Example API endpoint (replace with your own logic)
+app.post("/generate-video", (req, res) => {
+    const { text, mode } = req.body;
+    // Placeholder logic for demo
+    res.json({ success: true, message: `Video generated in mode: ${mode}` });
 });
 
-app.listen(PORT, () = VImage Creator running on port ${PORT}`));
+// Handle all other routes to serve frontend
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
+});
+
+// Use Render's dynamic port or fallback to 3000 locally
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✅ VImage Creator running on port ${PORT}`));
+
